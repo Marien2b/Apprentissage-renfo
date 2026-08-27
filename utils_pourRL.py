@@ -173,32 +173,64 @@ class Jeu:
     def get_state(self):
         # Garder une forme constante (5 valeurs) est indispensable pour le DQN,
         # y compris pendant la derniere transition d'un episode.
-        prochain_obstacle = None
-        for obstacle in self.obstacles:
-            largeur = largeur_obstacle(obstacle)
+        prochain_obstacle1 = None
+        prochain_obstacles2 = None
+        for i in range(len(self.obstacles) - 1):
+            obstacle1 = self.obstacles[i]
+            obstacle2 = self.obstacles[i+1]
+            largeur1 = largeur_obstacle(obstacle1)
+            largeur2 = largeur_obstacle(obstacle2)
             # L'obstacle reste pertinent jusqu'a ce qu'il soit entierement passe.
-            if obstacle.x + largeur > self.joueur.x:
-                prochain_obstacle = obstacle
+            if obstacle1.x + largeur1 > self.joueur.x and  obstacle2.x + largeur2 > self.joueur.x:
+                prochain_obstacle1 = obstacle1
+                prochain_obstacle2 = obstacle2
+            
                 break
 
-        if prochain_obstacle is None:
-            return self.joueur.y, self.joueur.vy, 0.0, -1, 0.0
+        if prochain_obstacle1 is None:
+            return self.joueur.y, self.joueur.vy, 0.0, -1, 0.0, 0.0, -1, 0.0
 
-        if type_obstacle(prochain_obstacle) == "pique":
-            type_obstacle_id = 0
-        elif type_obstacle(prochain_obstacle) == "carre":
-            type_obstacle_id = 1
+        
+
+        if type_obstacle(prochain_obstacle1) == "pique":
+            type_obstacle_id1 = 0
+        elif type_obstacle(prochain_obstacle1) == "carre":
+            type_obstacle_id1 = 1
         else:
-            type_obstacle_id = 2
+            type_obstacle_id1 = 2
 
-        distance = prochain_obstacle.x - self.joueur.x
-        return (
+        distance1 = prochain_obstacle1.x - self.joueur.x
+        if prochain_obstacle2 is None:
+            return (
             self.joueur.y,
             self.joueur.vy,
-            distance,
-            type_obstacle_id,
-            prochain_obstacle.y,
+            distance1,
+            type_obstacle_id1,
+            prochain_obstacle1.y,
+            0,
+            -1,
+            0
         )
+        else:
+            if type_obstacle(prochain_obstacle2) == "pique":
+                type_obstacle_id2 = 0
+            elif type_obstacle(prochain_obstacle2) == "carre":
+                type_obstacle_id2 = 1
+            else:
+                type_obstacle_id2 = 2
+            
+            distance2 = prochain_obstacle2.x - self.joueur.x
+
+            return (
+                        self.joueur.y,
+                        self.joueur.vy,
+                        distance1,
+                        type_obstacle_id1,
+                        prochain_obstacle1.y,
+                        distance2,
+                        type_obstacle_id2,
+                        prochain_obstacle2.y
+                    )
 
     def step(self, action):
         reward = 1
@@ -535,7 +567,7 @@ ajouter_pique(15800)
 
 ajouter_plateforme_forcee(
     16150,
-    60
+    80
 )
 
 ajouter_pique(16500)
@@ -575,7 +607,7 @@ ajouter_pique(19350)
 ajouter_carre(
     19600,
     0,
-    60
+    80
 )
 
 ajouter_pique(19900)
@@ -599,7 +631,7 @@ ajouter_pique(21010)
 
 ajouter_plateforme_forcee(
     21400,
-    40
+    80
 )
 
 ajouter_plateforme_forcee(
@@ -624,12 +656,12 @@ ajouter_plateforme_forcee(
 
 ajouter_plateforme_forcee(
     22900,
-    70
+    100
 )
 
 ajouter_plateforme_forcee(
     23200,
-    40
+    80
 )
 
 
@@ -674,7 +706,7 @@ ajouter_pique(26800)
 
 ajouter_plateforme_forcee(
     27200,
-    70
+    100
 )
 
 ajouter_plateforme_forcee(
