@@ -188,7 +188,7 @@ class Jeu:
                 break
 
         if prochain_obstacle1 is None:
-            return self.joueur.y, self.joueur.vy, 0.0, -1, 0.0, 0.0, -1, 0.0
+            return self.joueur.y, self.joueur.vy, 0.0, -1, 0.0, 0.0, -1, 0.0, self.joueur.vx
 
         
 
@@ -209,7 +209,8 @@ class Jeu:
             prochain_obstacle1.y,
             0,
             -1,
-            0
+            0,
+            self.joueur.vx
         )
         else:
             if type_obstacle(prochain_obstacle2) == "pique":
@@ -229,7 +230,8 @@ class Jeu:
                         prochain_obstacle1.y,
                         distance2,
                         type_obstacle_id2,
-                        prochain_obstacle2.y
+                        prochain_obstacle2.y,
+                        self.joueur.vx
                     )
 
     def step(self, action):

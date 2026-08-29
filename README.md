@@ -1,20 +1,47 @@
-# Apprentissage-renfo
-Création d'un jeu en python et implémentation d'une IA RL
+# Apprentissage par renforcement
 
-## Fichier
+Création d'un jeu en Python inspiré de **Geometry Dash**, puis implémentation d'un agent capable d'y jouer grâce à un **Deep Q-Network (DQN)**.
 
-Le projet est composé de plusieurs fichier:
+## Fichiers
 
-- le premier est le dossier Jeu.ipynb qui implémente un jeu GeometryDash-like jouable avec le clavier, il 
-n'y a que trois classes d'objets: pique où tout contact fait perdre le joueur, carré où le joueur peut se poser 
-dessus mais un contact sur les bords implique la mort du joueur, et plateforme à travers laquelle le joueur peut passer et sur laquelle il peut se poser. Ce premier fichier met également en place la classe affichage qui sera plaisante pour visionner notre agent qui joue
+Le projet est composé de plusieurs fichiers :
 
-- le deuxième fichier Jeu_RL est une version du jeu sans affichage destinée à être la version
-sur laquelle l'agent s'entraîne (afficher le jeu ralentirait énormément l'entrainement). Cette version du jeu est complétée par "get_state" qui permet d'obtenir l'état actuel du jeu que j'ai limité à 5 éléments dans un premier temps: vitesse verticale du joueur, position verticale, distance au prochain obstacle, type du prochain obstacle et hauteur du prochain obstacle, on a evidemment une large marge de manoeuvre pour améliorer notre agent: on aurait pu rajoute la vitesse horizontale, la taille des objets, et une vision à deux ou trois objets, pas juste le suivant. Cette version du jeu est aussi constituée d'un reset qui permettra aà l'agent de recommencer
+- **`Jeu.ipynb`** : version jouable du jeu avec affichage. Trois types d'obstacles sont implémentés : piques, carrés et plateformes.
 
-- Enfin, DQN, le troisième fichier, met en place l'agent, sa boucle d'entrainement ainsi qu'une version du jeu où c'est l'agent lui même qui joue. 
+- **`Jeu_RL`** : version sans affichage destinée à l'entraînement de l'agent.  
+  L'état du jeu est représenté par 5 informations :
+  - position verticale du joueur ;
+  - vitesse verticale ;
+  - distance au prochain obstacle ;
+  - type de l'obstacle ;
+  - hauteur de l'obstacle.
 
-- Le fichier qui fait le pont entre tous les autres fichiers est utils_pourRL qui est constitué de copies des fonctions utiles de Jeu_RL que j'importe dans DQN.
+  Cette représentation pourrait être enrichie en donnant à l'agent davantage d'informations sur les obstacles suivants.
+
+- **`DQN`** : implémentation de l'agent, de sa boucle d'entraînement et d'une version permettant de visualiser l'agent jouer.
+
+- **`utils_pourRL`** : contient les fonctions et classes utiles importées par les autres fichiers.
 
 ## Principe du DQN
 
+Le réseau reçoit l'état du jeu en entrée et estime une valeur \(Q(s,a)\) pour chaque action possible.
+
+À chaque étape, l'agent choisit entre **exploration** et **exploitation** grâce à une stratégie ε-greedy.
+
+Les transitions
+
+\[
+(s,a,r,s',done)
+\]
+
+sont stockées dans une **replay memory**, puis utilisées pour entraîner le réseau à respecter approximativement l'équation de Bellman :
+
+\[
+Q(s,a) \approx r + \gamma \max_{a'} Q(s',a')
+\]
+
+Un **target network**, mis à jour périodiquement, est également utilisé afin de rendre l'entraînement plus stable.
+
+L'objectif est ainsi d'apprendre progressivement quelles actions permettent d'éviter les obstacles et d'aller le plus loin possible dans le niveau.
+
+## Résultats
