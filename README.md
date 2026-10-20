@@ -35,6 +35,8 @@ L'objectif est d'apprendre à franchir les obstacles et à progresser le plus lo
 
 ![alt text](Animation.gif)
 
+A noter qu'il faut s'assurer que les états soient dans des ordres de grandeur similaires et donc renormaliser: j'ai passé beaucoup de temps à régler certains hyperparamètres alors que le problème était les ordres de grandeurs de mes états.
+
 ## Améliorations possibles
 
 - Prendre en compte plus d'obstacles successifs.
