@@ -46,4 +46,6 @@ L'objectif est ainsi d'apprendre progressivement quelles actions permettent d'é
 
 ## Résultats
 
-...
+![alt text](Animation.gif)
+
+J'ai mis beaucoup de temps à stabiliser mon entrainement: le choix des hyperparamètres est très important, et il y a eu beaucoup de "taton". 

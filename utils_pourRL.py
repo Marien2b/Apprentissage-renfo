@@ -1,11 +1,10 @@
-import copy 
+import copy
 import pygame
 
 
 def type_obstacle(obstacle):
     """Renvoie un type stable meme apres un reload dans Jupyter."""
     return type(obstacle).__name__.lower()
-
 
 def largeur_obstacle(obstacle):
     if type_obstacle(obstacle) == "plateforme":
@@ -15,7 +14,7 @@ def largeur_obstacle(obstacle):
 class Objet:
     def __init__(self, x, y):
         self.x = x
-        self.y = y 
+        self.y = y
 
 
 class Joueur(Objet):
@@ -33,7 +32,7 @@ class carre(Objet):
 class plateforme(Objet):
     def __init__(self, x, y):
         super().__init__(x,y)
-    
+
 
 class pique(Objet):
     def __init__(self, x, y, taille):
@@ -54,7 +53,7 @@ class Jeu:
     def saut(self):
         if self.joueur.y == 0 or self.surplateform(self.joueur.x, self.joueur.y):
             self.joueur.vy = 15
-        
+
 
     def deplacer_obstacles(self):
         for obstacle in self.obstacles:
@@ -93,7 +92,7 @@ class Jeu:
             if chevauchement and y_avant >= hauteur_support >= y_apres:
                 return hauteur_support
         return None
-        
+
     def mettre_a_jour_joueur(self):
         y_avant = self.joueur.y
         self.joueur.vy += self.joueur.gravite
@@ -122,8 +121,8 @@ class Jeu:
         for obstacle in self.obstacles:
 
             if type_obstacle(obstacle) == "plateforme":
-                
-                continue  
+
+                continue
 
             else:
                 if type_obstacle(obstacle) == "carre":
@@ -166,7 +165,7 @@ class Jeu:
                     else:
                         continue
 
-                
+
 
         return False
 
@@ -184,13 +183,13 @@ class Jeu:
             if obstacle1.x + largeur1 > self.joueur.x and  obstacle2.x + largeur2 > self.joueur.x:
                 prochain_obstacle1 = obstacle1
                 prochain_obstacle2 = obstacle2
-            
+
                 break
 
         if prochain_obstacle1 is None:
-            return self.joueur.y, self.joueur.vy, 0.0, -1, 0.0, 0.0, -1, 0.0, self.joueur.vx
+            return self.joueur.y / 600, self.joueur.vy / 20, 0.0, -1, 0.0, 0.0, -1, 0.0, self.joueur.vx
 
-        
+
 
         if type_obstacle(prochain_obstacle1) == "pique":
             type_obstacle_id1 = 0
@@ -202,15 +201,15 @@ class Jeu:
         distance1 = prochain_obstacle1.x - self.joueur.x
         if prochain_obstacle2 is None:
             return (
-            self.joueur.y,
-            self.joueur.vy,
-            distance1,
-            type_obstacle_id1,
-            prochain_obstacle1.y,
+            self.joueur.y / 600,
+            self.joueur.vy / 20,
+            distance1 / 800,
+            type_obstacle_id1 / 2,
+            prochain_obstacle1.y / 600,
             0,
             -1,
             0,
-            self.joueur.vx
+            self.joueur.vx / 20
         )
         else:
             if type_obstacle(prochain_obstacle2) == "pique":
@@ -219,23 +218,23 @@ class Jeu:
                 type_obstacle_id2 = 1
             else:
                 type_obstacle_id2 = 2
-            
+
             distance2 = prochain_obstacle2.x - self.joueur.x
 
             return (
-                        self.joueur.y,
-                        self.joueur.vy,
-                        distance1,
-                        type_obstacle_id1,
-                        prochain_obstacle1.y,
-                        distance2,
-                        type_obstacle_id2,
-                        prochain_obstacle2.y,
-                        self.joueur.vx
+                        self.joueur.y / 600,
+                        self.joueur.vy / 20,
+                        distance1 / 800,
+                        type_obstacle_id1 / 600,
+                        prochain_obstacle1.y / 600 ,
+                        distance2 / 800,
+                        type_obstacle_id2 / 2,
+                        prochain_obstacle2.y / 600,
+                        self.joueur.vx / 20
                     )
 
     def step(self, action):
-        reward = 1
+        reward = 0.1
         done = False
         if action == 1:
             self.saut()
@@ -245,11 +244,11 @@ class Jeu:
 
         collision = self.verifier_collision()
         if collision:
-            reward -= 100
+            reward = -1
             done = True
         next_state = self.get_state()
         if not collision and next_state[3] == -1:
-            reward = 100
+            reward = 10
             done = True
         return next_state, reward, done
 
@@ -285,7 +284,7 @@ class Affichage:
                     obstacle.taille
                 )
             )
-            
+
 
         elif nom_type_obstacle == "plateforme":
             largeur = 150
