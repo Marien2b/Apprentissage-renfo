@@ -268,9 +268,7 @@ class Affichage:
 
 
     def dessiner_obstacle(self, obstacle):
-        # Les notebooks peuvent conserver des instances d'une ancienne version
-        # des classes apres la reexecution d'une cellule. Le nom de classe reste
-        # stable et evite alors que tous les obstacles deviennent invisibles.
+        
         nom_type_obstacle = type(obstacle).__name__.lower()
 
         if nom_type_obstacle == "carre":
@@ -389,7 +387,7 @@ def ajouter_plateforme_forcee(x, y):
     )
 
 
-# NIVEAU
+# NIVEAU PRINCIPAL
 
 
 ajouter_pique(700)
